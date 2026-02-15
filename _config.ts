@@ -1,4 +1,4 @@
-	import lume from "lume/mod.ts";
+import lume from "https://deno.land/x/lume/cli.ts";
 import robots from "lume/plugins/robots.ts";
 import postcss from "lume/plugins/postcss.ts";
 import seo from "lume/plugins/seo.ts";

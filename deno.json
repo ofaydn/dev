@@ -32,7 +32,7 @@
     }
   },
   "tasks": {
-    "lume": "deno run -A lume/cli.ts",
+    "lume": "deno run -A https://deno.land/x/lume/cli.ts",
     "build": "deno task lume",
     "serve": "deno task lume -s"
   },
