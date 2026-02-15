@@ -32,7 +32,7 @@
     }
   },
   "tasks": {
-    "lume": "deno run -P=lume lume/cli.ts",
+    "lume": "deno run -A lume/cli.ts",
     "build": "deno task lume",
     "serve": "deno task lume -s"
   },
