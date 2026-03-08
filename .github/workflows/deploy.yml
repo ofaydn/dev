@@ -8,7 +8,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: denoland/setup-deno@v1
-      - run: deno task lume
+        with:
+          deno-version: v2.x
+      - run: deno task build
       - uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
