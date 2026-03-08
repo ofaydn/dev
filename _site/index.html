@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="bg-grid"></div>
+<div class="noise"></div>
+
+<div class="hud-tl"><span class="hl">LOC</span> <span id="clock">--:--:--</span></div>
+<div class="hud-tr"><span class="hl">NET</span> <span class="online">● ONLINE</span></div>
+
+<svg class="hex-stage" id="stage" viewBox="-320 -300 640 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <g id="lines" opacity="0.3"></g>
+  <g id="satellites"></g>
+  <g id="center-hex" transform="translate(0,0)">
+    <polygon class="hex-bg-c" points="0,-62 53.7,-31 53.7,31 0,62 -53.7,31 -53.7,-31"/>
+    <polygon class="hex-bd-c" points="0,-62 53.7,-31 53.7,31 0,62 -53.7,31 -53.7,-31"/>
+    <text class="cn" y="-8">ömer</text>
+    <text class="cn" y="10">faruk</text>
+    <text class="cr" y="28">developer</text>
+  </g>
+</svg>
+
+<div class="panel" id="panel">
+  <div class="panel-head">
+    <span class="p-icon" id="p-icon"></span>
+    <span class="p-title" id="p-title"></span>
+    <button class="panel-x" id="panel-x">✕</button>
+  </div>
+  <div class="panel-body" id="p-body"></div>
+</div>
+
+<div class="hint" id="hint">click a hexagon</div>
+
+<script>
+const NODES = [
+  { id:"work",    label:"WORK",    icon:"⬡", angle:0,
+    color:"#7eb8f7",
+    html:`<ul class="elist"><li><b>Project Alpha</b><span>2024 · web</span></li><li><b>Neon Dashboard</b><span>2023 · ui</span></li><li><b>CLI Toolkit</b><span>2023 · oss</span></li><li><b>Data Viz Engine</b><span>2022 · vis</span></li></ul>` },
+  { id:"blog",    label:"BLOG",    icon:"◎", angle:60,
+    color:"#f7c77e",
+    html:`<ul class="elist"><li><b>On building in public</b><span>Jun 2024</span></li><li><b>CSS-only 3D tricks</b><span>Apr 2024</span></li><li><b>Deno vs Node 2024</b><span>Feb 2024</span></li><li><b>Minimalism as a tool</b><span>Jan 2024</span></li></ul>` },
+  { id:"stack",   label:"STACK",   icon:"◈", angle:120,
+    color:"#a8f7a0",
+    html:`<div class="slist"><div class="si"><span>Deno</span><div class="bar" style="--p:90%"></div></div><div class="si"><span>TypeScript</span><div class="bar" style="--p:85%"></div></div><div class="si"><span>Lume SSG</span><div class="bar" style="--p:80%"></div></div><div class="si"><span>WebGL / CSS</span><div class="bar" style="--p:75%"></div></div><div class="si"><span>Linux / CLI</span><div class="bar" style="--p:95%"></div></div></div>` },
+  { id:"about",   label:"ABOUT",   icon:"△", angle:180,
+    color:"#f79e7e",
+    html:`<p class="bio">Builder of things digital. Interested in systems, aesthetics, and the space where code meets craft.</p><div class="tags"><span>open source</span><span>performance</span><span>clean APIs</span><span>dark mode</span></div>` },
+  { id:"contact", label:"CONTACT", icon:"⬟", angle:240,
+    color:"#c8a0f7",
+    html:`<div class="clinks"><a href="https://github.com/ofaydn" class="crow"><span>github</span><span>ofaydn</span></a><a href="mailto:your@email.com" class="crow"><span>email</span><span>your@email.com</span></a></div>` },
+  { id:"resume",  label:"SOCIALS",  icon:"▽", angle:300,
+    color:"#f7f0a0",
+    html:`<p class="bio"><a href="#" class="dlbtn">LinkedIn</a></p>` },
+];
+
+const R = 155, S = 44;
+const linesG = document.getElementById('lines');
+const satsG  = document.getElementById('satellites');
+
+function hexPts(cx, cy, r) {
+  return Array.from({length:6}, (_,i) => {
+    const a = Math.PI/180*(60*i-30);
+    return `${cx+r*Math.cos(a)},${cy+r*Math.sin(a)}`;
+  }).join(' ');
+}
+
+function el(tag, attrs={}) {
+  const e = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  Object.entries(attrs).forEach(([k,v]) => e.setAttribute(k,v));
+  return e;
+}
+
+NODES.forEach((node, i) => {
+  const rad = Math.PI/180 * node.angle;
+  const cx  = R * Math.cos(rad);
+  const cy  = R * Math.sin(rad);
+
+  const line = el('line',{x1:0,y1:0,x2:cx,y2:cy,'stroke-width':'1'});
+  line.style.stroke = node.color;
+  line.id = `ln-${node.id}`;
+  linesG.appendChild(line);
+
+  const g = el('g',{transform:`translate(${cx},${cy})`});
+  g.classList.add('sat');
+  g.dataset.id = node.id;
+
+  const bg = el('polygon',{points:hexPts(0,0,S),filter:'url(#glow)'});
+  bg.style.cssText = `fill:${node.color}10;stroke:${node.color}50;stroke-width:1;transition:fill .2s,stroke .2s`;
+
+  const icon = el('text',{y:'-6','text-anchor':'middle','dominant-baseline':'middle'});
+  icon.classList.add('sat-icon');
+  icon.style.fill = node.color;
+  icon.textContent = node.icon;
+
+  const lbl = el('text',{y:'14','text-anchor':'middle'});
+  lbl.classList.add('sat-lbl');
+  lbl.style.fill = node.color;
+  lbl.textContent = node.label;
+
+  g.append(bg, icon, lbl);
+  satsG.appendChild(g);
+
+  // animate in
+  g.style.cssText += `opacity:0;transition:opacity .4s ${0.08+i*.08}s`;
+  requestAnimationFrame(() => requestAnimationFrame(() => g.style.opacity = '1'));
+
+  g.addEventListener('mouseenter', () => {
+    bg.style.fill  = node.color + '28';
+    bg.style.stroke = node.color + 'cc';
+    document.getElementById(`ln-${node.id}`).style.opacity = '1';
+  });
+  g.addEventListener('mouseleave', () => {
+    bg.style.fill  = node.color + '10';
+    bg.style.stroke = node.color + '50';
+    document.getElementById(`ln-${node.id}`).style.opacity = '';
+  });
+  g.addEventListener('click', () => openPanel(node));
+});
+
+const panel = document.getElementById('panel');
+document.getElementById('panel-x').addEventListener('click', () => panel.classList.remove('open'));
+
+function openPanel(n) {
+  document.getElementById('p-icon').textContent = n.icon;
+  document.getElementById('p-icon').style.color = n.color;
+  document.getElementById('p-title').textContent = n.label;
+  document.getElementById('p-title').style.color = n.color;
+  document.getElementById('p-body').innerHTML = n.html;
+  panel.classList.add('open');
+  document.getElementById('hint').style.opacity = '0';
+}
+
+function tick(){
+  const d=new Date();
+  document.getElementById('clock').textContent=
+    [d.getHours(),d.getMinutes(),d.getSeconds()].map(n=>String(n).padStart(2,'0')).join(':');
+}
+tick(); setInterval(tick,1000);
+</script>
+
+</body>
+</html>

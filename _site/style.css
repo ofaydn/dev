@@ -1,0 +1,229 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700&family=DM+Mono:wght@300;400&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:    #07080a;
+  --fg:    #d8d4cc;
+  --dim:   #3a3830;
+  --faint: #0f1014;
+  --panel: #0b0c10;
+  --bd:    rgba(255,255,255,0.08);
+  --mono:  'DM Mono', 'Fira Mono', monospace;
+  --disp:  'Syne', sans-serif;
+}
+
+html, body {
+  height: 100%; overflow: hidden;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+/* ── Background grid ──────────────────────────────────────── */
+
+.bg-grid {
+  position: fixed; inset: 0; z-index: 0;
+  background-image:
+    linear-gradient(var(--bd) 1px, transparent 1px),
+    linear-gradient(90deg, var(--bd) 1px, transparent 1px);
+  background-size: 60px 60px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+          mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+}
+
+/* ── Film grain ───────────────────────────────────────────── */
+
+.noise {
+  pointer-events: none; position: fixed; inset: 0; z-index: 99;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: .04; mix-blend-mode: overlay;
+}
+
+/* ── HUD corners ──────────────────────────────────────────── */
+
+.hud-tl, .hud-tr {
+  position: fixed; top: 22px; z-index: 10;
+  font-size: 10px; letter-spacing: .14em; color: #444;
+  display: flex; gap: 8px; align-items: center;
+}
+
+.hud-tl { left: 24px; }
+
+.hud-tr { right: 24px; }
+
+.hl     { color: #555; }
+
+.online { color: #6dbb6d; letter-spacing: .08em; }
+
+/* ── SVG stage ────────────────────────────────────────────── */
+
+.hex-stage {
+  position: relative; z-index: 1;
+  width: 100vw; height: 100vh;
+  display: block;
+  overflow: visible;
+}
+
+/* ── Center hex ───────────────────────────────────────────── */
+
+.hex-bg-c {
+  fill: rgba(255,255,255,0.03);
+}
+
+.hex-bd-c {
+  fill: none;
+  stroke: rgba(255,255,255,0.15);
+  stroke-width: 1;
+}
+
+.cn {
+  font-family: var(--disp);
+  font-size: 13px; font-weight: 700;
+  text-anchor: middle;
+  fill: #e8e2d5;
+  letter-spacing: .18em;
+}
+
+.cr {
+  font-family: var(--mono);
+  font-size: 8px;
+  text-anchor: middle;
+  fill: #555;
+  letter-spacing: .2em;
+}
+
+/* ── Satellite hexagons ───────────────────────────────────── */
+
+.sat { cursor: pointer; }
+
+.sat-icon {
+  font-size: 18px;
+  text-anchor: middle; dominant-baseline: middle;
+}
+
+.sat-lbl {
+  font-family: var(--mono);
+  font-size: 8px; letter-spacing: .18em;
+  text-anchor: middle;
+}
+
+/* ── Panel ────────────────────────────────────────────────── */
+
+.panel {
+  position: fixed; right: 0; top: 0; bottom: 0;
+  width: min(340px, 88vw);
+  background: var(--panel);
+  border-left: 1px solid var(--bd);
+  transform: translateX(100%);
+  transition: transform .45s cubic-bezier(.16,1,.3,1);
+  display: flex; flex-direction: column;
+  z-index: 50;
+}
+
+.panel.open { transform: translateX(0); }
+
+.panel-head {
+  padding: 20px 22px 16px;
+  border-bottom: 1px solid var(--bd);
+  display: flex; align-items: center; gap: 10px;
+}
+
+.p-icon  { font-size: 18px; }
+
+.p-title { font-family: var(--disp); font-size: 16px; letter-spacing: .22em; flex:1; }
+
+.panel-x {
+  background: none; border: 1px solid var(--dim);
+  color: #555; cursor: pointer;
+  width: 26px; height: 26px; font-size: 10px;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color .2s, color .2s;
+}
+
+.panel-x:hover { border-color: var(--fg); color: var(--fg); }
+
+.panel-body { padding: 22px; overflow-y: auto; flex: 1; }
+
+/* ── Panel content ────────────────────────────────────────── */
+
+.bio {
+  font-size: 14px; line-height: 1.75; color: var(--fg);
+  margin-bottom: 18px; opacity: .9;
+}
+
+.elist { list-style: none; display: flex; flex-direction: column; gap: 0; }
+
+.elist li {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 12px 0; border-bottom: 1px solid var(--faint);
+}
+
+.elist li b  { font-weight: 400; color: var(--fg); }
+
+.elist li span { font-size: 10px; color: #444; letter-spacing: .08em; }
+
+.slist { display: flex; flex-direction: column; gap: 14px; }
+
+.si    { display: flex; flex-direction: column; gap: 5px; }
+
+.si span { font-size: 11px; color: var(--fg); letter-spacing: .06em; }
+
+.bar {
+  height: 2px; background: var(--dim); position: relative; overflow: hidden;
+}
+
+.bar::after {
+  content: ''; position: absolute; inset-block: 0; left: 0;
+  width: var(--p); background: currentColor;
+  animation: grow .7s cubic-bezier(.16,1,.3,1) both;
+}
+
+@keyframes grow { from { width: 0; } }
+
+.tags { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.tags span {
+  font-size: 10px; letter-spacing: .1em;
+  border: 1px solid var(--dim); color: #666;
+  padding: 3px 8px;
+}
+
+.clinks { display: flex; flex-direction: column; }
+
+.crow {
+  display: flex; justify-content: space-between;
+  padding: 13px 0; border-bottom: 1px solid var(--faint);
+  text-decoration: none; transition: padding-left .2s;
+}
+
+.crow:hover { padding-left: 8px; }
+
+.crow span:first-child { font-size: 10px; color: #555; letter-spacing: .12em; }
+
+.crow span:last-child  { font-size: 12px; }
+
+.dlbtn {
+  display: inline-block; margin-top: 14px;
+  border: 1px solid currentColor;
+  padding: 9px 18px; font-family: var(--mono);
+  font-size: 11px; letter-spacing: .12em;
+  text-decoration: none; color: #f7f0a0;
+  transition: background .2s, color .2s;
+}
+
+.dlbtn:hover { background: #f7f0a0; color: var(--bg); }
+
+/* ── Hint ─────────────────────────────────────────────────── */
+
+.hint {
+  position: fixed; bottom: 26px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px; letter-spacing: .16em; color: #333;
+  pointer-events: none;
+  transition: opacity .8s;
+  animation: hint-out 1s 3s forwards;
+}
+
+@keyframes hint-out { to { opacity: 0; } }
