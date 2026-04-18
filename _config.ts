@@ -1,6 +1,6 @@
 import lume from "lume/mod.ts";
 
-const site = lume({ location: new URL("https://ofaydn.github.io/") });
+const site = lume({ location: new URL("https://ofaydn.github.io/dev/") });
 site.add("style.css");
 site.copy("CNAME");
 
