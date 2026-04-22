@@ -1,0 +1,13 @@
+---
+layout: layout.vto
+---
+<h1>{{ title }}</h1>
+
+<div class="list">
+  {{ for post of search.pages("type=work", "date=desc") }}
+    <article>
+      <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
+      <p>{{ post.date |> date('DATE') }}</p>
+    </article>
+  {{ /for }}
+</div>

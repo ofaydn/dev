@@ -16,3 +16,14 @@ html, body {
   font-size: 13px;
   overflow: hidden;
 }
+
+.name::before {
+  content: "";
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: url('/assets/logo.svg') no-local;
+  background-size: contain;
+  margin-right: 10px;
+  vertical-align: middle;
+}
