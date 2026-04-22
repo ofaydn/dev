@@ -16,3 +16,64 @@ html, body {
   font-size: 13px;
   overflow: hidden;
 }
+
+.name::before {
+  content: "";
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: url('/assets/logo.svg') no-local;
+  background-size: contain;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+
+/* Container for all content pages */
+main, article {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  line-height: 1.6;
+  color: #333;
+}
+
+/* Headers */
+h1, h2, h3 {
+  font-family: 'Syne', sans-serif;
+  margin-top: 1.5em;
+  color: #222;
+}
+
+/* Back button / Navigation */
+.back-nav {
+  display: block;
+  margin-bottom: 40px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #41c0b6;
+  text-decoration: none;
+}
+
+/* Markdown elements spacing */
+p, ul, ol, img {
+  margin-bottom: 1.5em;
+}
+
+li {
+  margin-bottom: 0.5em;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+/* Links inside posts */
+article a {
+  color: #41c0b6;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}

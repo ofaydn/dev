@@ -1,13 +1,49 @@
 ---
 layout: layout.vto
 ---
-<h1>{{ title }}</h1>
+<h1 style="text-transform: uppercase; letter-spacing: 0.3em; margin-bottom: 40px;">
+  geçmiş iş deneyimlerim
+</h1>
 
-<div class="list">
-  {{ for post of search.pages("type=work", "date=desc") }}
-    <article>
-      <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
-      <p>{{ post.date |> date('DATE') }}</p>
-    </article>
+<div class="work-container">
+  {{ for item of search.pages("type=" + type + " title!=undefined", "date=desc") }}
+    <div style="margin-bottom: 50px; position: relative; border-bottom: 1px solid #eee; padding-bottom: 30px;">
+      
+      {{ if item.period }}
+        <span style="
+          position: absolute; 
+          right: 0; 
+          top: 5px; 
+          font-size: 11px; 
+          font-family: 'DM Mono', monospace; 
+          color: #888;
+          letter-spacing: 0.05em;
+        ">
+          {{ item.period }}
+        </span>
+      {{ /if }}
+
+      <h2 style="margin: 0; font-size: 1.4rem; color: #333; max-width: 70%;">
+        <a href="{{ item.url }}" style="text-decoration: none; color: inherit;">{{ item.title }}</a>
+      </h2>
+
+      <div style="margin-top: 5px; display: flex; align-items: center; gap: 8px;">
+        <span style="
+          font-family: 'DM Mono', monospace; 
+          font-size: 12px; 
+          color: #41c0b6; 
+          font-weight: bold;
+        ">
+          @{{ item.company || "Freelance" }}
+        </span>
+      </div>
+
+      <div style="margin-top: 15px; color: #666; font-size: 0.95rem; line-height: 1.6;">
+        {{ if item.content }}
+            {{ item.content.substring(0, 200) }}...
+        {{ /if }}
+        </div>
+
+    </div>
   {{ /for }}
 </div>

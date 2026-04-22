@@ -3,13 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ title }}</title>
+  <title>{{ title }} | ömer faruk</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-  {{ content }}
+  {{ if url != "/" }}
+    <main>
+      <div style="margin-bottom: 40px; display: flex; gap: 15px;">
+        <a href="/" class="back-nav" style="margin-bottom: 0;">← Home</a>
+        
+        {{ if type }}
+          <span style="color: #ccc;">|</span>
+          <a href="/{{ type }}/" class="back-nav" style="margin-bottom: 0;">
+             {{ type.toUpperCase() }}
+          </a>
+        {{ /if }}
+      </div>
+
+      <article>
+        {{ content }}
+      </article>
+    </main>
+  {{ else }}
+    {{ content }}
+  {{ /if }}
 </body>
 </html>

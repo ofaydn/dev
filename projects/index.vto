@@ -1,13 +1,76 @@
 ---
 layout: layout.vto
 ---
-<h1>{{ title }}</h1>
+<h1 style="text-transform: uppercase; letter-spacing: 0.3em; margin-bottom: 40px;">
+  projeler
+</h1>
 
-<div class="list">
-  {{ for post of search.pages("type=projects", "date=desc") }}
-    <article>
-      <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
-      <p>{{ post.date |> date('DATE') }}</p>
-    </article>
+<div class="list-container">
+  {{ for item of search.pages("type=" + type + " title!=undefined","date=desc") }}
+    <div style="margin-bottom: 48px; border-left: 2px solid #41c0b6; padding-left: 24px; position: relative;">
+      
+      {{ if item.status }}
+        <span style="
+          position: absolute; 
+          right: 0; 
+          top: 0; 
+          font-size: 10px; 
+          font-family: 'DM Mono', monospace;
+          padding: 4px 10px; 
+          border-radius: 4px; 
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          background: {{ item.status == 'Active' ? '#e6f4f1' : '#fceaea' }};
+          color: {{ item.status == 'Active' ? '#1abc9c' : '#e74c3c' }};
+          border: 1px solid {{ item.status == 'Active' ? '#1abc9c' : '#e74c3c' }};
+        ">
+          {{ item.status }}
+        </span>
+      {{ /if }}
+
+      <h2 style="margin: 0; font-size: 1.5rem;">
+        <a href="{{ item.url }}" style="text-decoration: none; color: #333;">{{ item.title }}</a>
+      </h2>
+
+      {{ if item.date }}
+        <small style="color: #aaa; font-family: 'DM Mono';">{{ item.date |> date('DATE') }}</small>
+      {{ /if }}
+
+      <p style="margin-top: 12px; color: #666; font-size: 0.95rem; max-width: 80%;">
+        {{ item.description || "Geliştirdiğim / deneyimlediğim projeler" }}
+      </p>
+
+      {{ if item.tech }}
+        <div class="tech-scroll" style="
+          display: flex; 
+          gap: 10px; 
+          overflow-x: auto; 
+          padding-bottom: 8px; 
+          margin-top: 15px;
+          scrollbar-width: none; /* Firefox */
+        ">
+          {{ for tool of item.tech }}
+            <span style="
+              background: #f0f0f0; 
+              color: #555; 
+              padding: 3px 12px; 
+              border-radius: 12px; 
+              font-size: 11px; 
+              font-family: 'DM Mono', monospace;
+              white-space: nowrap;
+            ">
+              #{{ tool }}
+            </span>
+          {{ /for }}
+        </div>
+      {{ /if }}
+
+    </div>
   {{ /for }}
 </div>
+
+<style>
+  .tech-scroll::-webkit-scrollbar {
+    display: none;
+  }
+</style>
