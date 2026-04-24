@@ -1,0 +1,9 @@
+---
+title: "self-host şifre yöneticisi"
+date: 2026-04-24
+tags: [cybersecurity, homelab,self-host,vaultwarden]
+description: "vaultwarden kurulum tecrübem"
+---
+şifrelerimi tek bir yerde toparlamak ve kolayca erişebilmek için bir parola yöneticisine ihtiyaç duyduğumu farkettim. bu yüzden parola yöneticilerini araştırmaya başladım. fakat aklıma hazır evde bir sunucum var neden kendim hostlamıyorum diye düşündüm. hemen self-host parola yöneticisi araştırdım ve vaultwarden ile karşılaştım. bu vaultwarden, aslında resmi bitwarden'ın resmi olmayan fakat birebir kopyası. kaynak kodu açık olduğu için güvenip indirdim ve docker üzerinden cihazıma kurdum. karşılaştığım bir zorluk şu oldu, vaultwardenın çalışması için ssl sertifikasına ihtiyacı var, fakat hostumda daha önce buna hiç ihtiyaç duymamıştım ve tailscale'in altyapısına güveniyordum. fakat burada da tailscale'in https'i aktif etme özelliği işime yaradı. buradaki tek sorun sadece 443 portunu kullanabiliyorsunuz yani başka bir port üzerinden https hizmeti sunamıyorsunuz. nextcloud sunucum da 443 üzerinde olduğu için çakıştılar ve değiştirmem gerekti. neyse ki hallettim ve bitwardenin tarayıcı eklentisini kurdum, giriş yaparken self-host seçeneğini seçtim ve tailscale domainim ile giriş yaptım. master şifreyi uzun ve kimsenin aklına gelemeycek bir kelime + sayı kombinasyonu yapmanızı öneriririm olabildiğince uzun olsun hatta. telefonuma da kurdum ve artık şifrelerimi tek bir yerden yönetebiliyorum. ayrıca kredi kartı ssh key ekleme özelliği de varmış fakat o kadar ileri gider miyim sanmıyorum, şimdilik böyle iyi.
+
+* **yazılım:** vaultwarden
