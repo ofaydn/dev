@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wireguard VPN Kurulumu | ömer faruk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <main>
+      <div style="margin-bottom: 40px; display: flex; gap: 15px;">
+        <a href="/" class="back-nav" style="margin-bottom: 0;">← Home</a>
+        
+          <span style="color: #ccc;">|</span>
+          <a href="/projects/" class="back-nav" style="margin-bottom: 0;">
+             PROJECTS
+          </a>
+      </div>
+
+      <article>
+        <p>Şirketimizde geliştirme yaparken github'ı kullanıyoruz. Fakat son yaşanan gelişmeler olsun hem de verinin kontrolünü de kendi kontrolümüz altına almayı isteidğimiz için açık kaynak kodlu bir alternatif arayışına çıktım. BU esnada Gitea'yı keşfettim bunun için daha sonra detaylı bir açıklama yapacağım.<br>
+Normalde krulumlarımda tailscale kullanırım ama ne olduysa bir türlü tailscale üzerinden hiçbir veri alışverişi yapamadım. en son wireguard kurmaya karar verdim, hem kernelde çalışan çok hafif bir vpn hem de kurulumu kolay. bu aşamada nasıl yaptığımı kısaca anlatacağım. bu kurulumda wireguard sunucusu ve kişisel bilgisayarım linux tabanlı kurulumlar ona göre.
+Sunucuda wireguard kurulumunu yapın, public ve private keyler oluşturun</p>
+<p><strong>apt install wireguard</strong><br>
+<strong>wg genkey | tee /etc/wireguard/server_private.key | wg pubkey &gt; /etc/wireguard/server_public.key</strong><br>
+<strong>chmod 600 /etc/wireguard/server_private.key</strong></p>
+<p>Daha sonra sunucudaki konfigürasyon dosyasına VPN sunucusunun ayarlarını girin:</p>
+<p><strong>nano /etc/wireguard/wg0.conf</strong></p>
+<p>Ve aşağıdaki gibi bir konfigürasyon yapın</p>
+<p><strong>[Interface]</strong><br>
+<strong>Address    = 10.0.0.1/24 #Burasını istediğiniz aralıkta yapabilirsiniz</strong><br>
+<strong>ListenPort = 51820</strong><br>
+<strong>PrivateKey = &lt;server_private.key içeriği&gt;</strong></p>
+<p><strong>PostUp   = iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE</strong><br>
+<strong>PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE</strong></p>
+<p>Eğer ufw kullanıyorsanız 51820 portunu açmanız lazım:<br>
+<strong>ufw allow 51820/udp</strong></p>
+<p>Ve servisi aktif hale getirin<br>
+<strong>systemctl enable --now wg-quick@wg0</strong></p>
+<p>SOnrasında kendi cihazınızda (benimki fedora) wireguard kurulumunu yapın ve anahtarları oluşturun
+<strong>sudo dnf install wireguard-tools</strong>
+<strong>wg genkey | tee fedora_private.key | wg pubkey &gt; fedora_public.key</strong></p>
+<p>Sunucudaki konfigürasyon içerisine oluşturduğunuz client public keyi girin:<br>
+<strong>nano /etc/wireguard/wg0.conf</strong></p>
+<p><strong>[Peer]</strong><br>
+<strong>PublicKey  = &lt;fedora_public.key&gt; #burayı public key içeriği ile dğeiştirin</strong><br>
+<strong>AllowedIPs = 10.0.0.2/32</strong></p>
+<p>Ve servisi yeniden başlatın<br>
+<strong>systemctl restart wg-quick@wg0</strong></p>
+<p>Client bilgisayarda da aynı yoldkai konfigürasyon dosyasını düzenleyin</p>
+<p><strong>[Interface]</strong><br>
+<strong>Address    = 10.0.0.2/32</strong><br>
+<strong>PrivateKey = &lt;fedora_private.key&gt;</strong></p>
+<p><strong>[Peer]</strong><br>
+<strong>PublicKey  = &lt;server_public.key&gt;</strong><br>
+<strong>Endpoint   = &lt;SUNUCU_IP_ADRESI&gt;:51820</strong><br>
+<strong>AllowedIPs = 10.0.0.1/32</strong><br>
+<strong>PersistentKeepalive = 25</strong></p>
+<p>Ve yeniden başlatın
+<strong>sudo systemctl enable --now wg-quick@wg0</strong></p>
+<p>CLient bilgisayardan sunucuyu pingleyip test edin:
+<strong>ping 10.0.0.1</strong></p>
+<p>Çalışıyorsa harika.
+Servislerinizi internete açmadan, sadece vpn üzerinden gelecek bağlantılara açmak istiyorsanız aşağıdaki ufw konfigürasyonunu uygulayın:</p>
+<p><strong>ufw allow in on wg0 to any port 3000</strong><br>
+<strong>ufw reload</strong></p>
+<p>Böylelikle servislerinizi dışarı açmadan uzaktan yönetebilirsiniz!</p>
+
+      </article>
+    </main>
+</body>
+</html>
