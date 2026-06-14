@@ -12,7 +12,7 @@
 <body>
   {{ if url != "/" }}
     <main>
-      <div style="margin-bottom: 40px; display: flex; gap: 15px;">
+      <div style=" display: flex; gap: 15px;">
         <a href="/" class="back-nav" style="margin-bottom: 0;">← Home</a>
         
         {{ if type }}
@@ -24,6 +24,7 @@
       </div>
 
       <article>
+      <h1>{{ title }}</h1>
         {{ content }}
       </article>
     </main>
