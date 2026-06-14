@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aselsan 4031 Telsiz Programlama | ömer faruk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <main>
+      <div style=" display: flex; gap: 15px;">
+        <a href="/" class="back-nav" style="margin-bottom: 0;">← Home</a>
+        
+          <span style="color: #ccc;">|</span>
+          <a href="/blog/" class="back-nav" style="margin-bottom: 0;">
+             BLOG
+          </a>
+      </div>
+
+      <article>
+      <h1>Aselsan 4031 Telsiz Programlama</h1>
+        <p>bugünkü yazımda aselsan 4031 sabit cihazı nasıl programladığıma değineceğim. aselsan 4031'i bilmeyenler için açıklayayım, aselsanın üretmiş olduğu sabit istasyon telsizidir. bu bir profesyonel cihazdır yani elle frekans girmeye müsait değildir ve zamanında kamu kurumlarında kullanılmıştır. 20W'lık çıkış gücü vardır. ikinci el aldığım bu telsiz kendi hoparlörlü güç ünitesi ile beraber geldi.<br>
+programlaması diğer telsizlere göre biraz daha zahmetli oldu çünkü bir kaç aşamadan oluşuyor ve kendi adaptörünüzü yapmanız gerekiyor.</p>
+<p>ihtiyacınız olanlar:<br>
+Windows 7-8-10-11 Bilgisayar<br>
+RS232 to USB Dönüştürücü ve rj45'e ile ethernet kablosunu kullanarak bağlayacağınız rs232 kutusu: <a href="https://app.hb.biz/mUmX0UlQz5wl">Hepsiburada listesi</a><br>
+Bir tane RJ45 uçlu ethernet kablosu.<br>
+<a href="https://drive.google.com/file/d/1xeOWxCKuYmvh4KijIh8dzd5q7WTeDjPX/view?usp=sharing">T4000 ve P4000 programları.(İçerisinde P4000 WİN7-8-10 olan Windows11 ile uyumlu çalışmaktadır.)</a></p>
+<p>İlk olarak programlama kablosunu yapın:</p>
+<p><img src="/assets/aselsan4031-programlama/rs232rj45.png" alt="aselsan4031 programlama kablosu"></p>
+<p>Burada dikkat etmeniz gereken bir şey var. Satın aldığınız rs232 konnektöründe numaralandırma sağ üstten başlıyor, yani fotoğrafta görünen 1. pin konnektöre baktığınızda 5. pinde gibi gözüküyor. Bu kafanızı karıştırmasın fotoğrafta rs232 için dediği 5. pini, kart üzerinde 5 yazılı pin olarak değerlendirin. Ben burada bayağı vakit kaybettim TA2PRN (Recep N.) sağolsun bu konuda beni bilgilendirdi.</p>
+<p><strong>USB Sürücü Kurulumu</strong></p>
+<ol>
+<li>RS232 dönüştürücüyü bilgisayarınıza taktıksan sonra aygıt yöneticisine girin.</li>
+<li>Orada  <strong>Bağlantı noktaları (COM ve LPT)</strong> menüsüne tıklayın ve altında cihazın hangi comda olduğunu göreceksiniz. eğer hali hazırda <strong>Prolific PL2303GT Usb Serial COM Port</strong> diye yazmıyor ise sürücü yüklü değildir.</li>
+<li>Cihaza sağ tıklayın ve <strong>Sürücüyü güncelleştir</strong>i seçin.</li>
+<li><strong>Bilgisayarımdaki sürücülere göz at</strong></li>
+<li><strong>Bilgisayarımdaki kullanılabilir sürücülerin bir listesinden seçmeme izin ver</strong></li>
+<li>Karşınıza çıkan menüde <strong>Prolific PL2303GT Usb Serial COM Port</strong> maddesi bulunuyor ise seçin, yoksa sürücüyü internetten indirip yükleyin.</li>
+</ol>
+<p><img src="/assets/aselsan4031-programlama/aygityoneticisi.png" alt="aygıt yöneticisi ekranı"><br>
+Bir diğer aşama olan telsizi amatör banda uygun hale getirme için T4000'i kullanmanız gerekiyor. Ben telsizi aldığımda bu sıfırlama yapılmıştı o yüzden T4000'in nasıl kullanılacağı konusunda bir fikrim yok. Bu yüzden P4000 kullanımına geçiyorum</p>
+<p>rj45'i telsize takıp rs232 dönüştürücüsünü de bilgisayarımıza taktıktan sonra P4000 programını açıyoruz</p>
+<p><img src="/assets/aselsan4031-programlama/p4000.png" alt="p4000 ekranı"><br>
+Üstte gördüğünüz telsizden bilgisayara işareti ile telsizden veri okuyabilir, diğeri ile de telsize veri yazabilirsiniz. en sağdaki tablo seçeneklerinden de diğer sayfalar arasında gezinebilir ve çeşitli ayarları konfigüre edebilirsiniz.</p>
+<p>Frekans yüklerken küsüratlar olmadan yüklemeniz gerekiyor. ayrıca eğer yüksek güç yani 20W'ın tamamını kullanmak isterseniz Y.Güç ayarını aktif hale getirebilirsiniz. tavsiyem röleler için düşük güçle çıkmanız, simplex frekanslar için ise hem düşük hem yüksek güçlü 2 ayrı kanal tanımlamanızdır.</p>
+<p>Bu yazıda uzun zamandır vakit bulamadığım ama bir o kadar da içimi kemiren aselsan 4031'e birlikte frekans yükledik. Umarım yardımcı olabilmişimdir. Diğer ayarları da karıştırdıktan sonra faydalı olabilecek özellikler için başka bir yazı paylaşabilirim, sorunuz olursa<br>
+<strong>ta2ydn [at] gmail.com</strong><br>
+adresinden ulabilirsiniz, <em>TA2YDN</em> 73!</p>
+<ul>
+<li><strong>donanım:</strong> RS232 Dönüştürücü, RS232 Adaptör, Ethernet Kablosu</li>
+<li><strong>yazılım:</strong> P4000, T4000 programları, RS232 Sürücüsü</li>
+</ul>
+
+      </article>
+    </main>
+</body>
+</html>
